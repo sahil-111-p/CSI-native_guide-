@@ -34,6 +34,7 @@ const NAV_GROUPS = [
     items: [
       { id: 'cheatsheet', label: '⚡ Cheat Sheet' },
       { id: 'troubleshooting', label: '🔧 Troubleshooting' },
+      { id: 'live-code', label: '📡 Live Workshop Code' },
     ]
   }
 ];

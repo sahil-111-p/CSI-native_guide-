@@ -39,6 +39,7 @@ export default function Footer() {
             <h4>Reference</h4>
             <a href="#cheatsheet">Cheat Sheet</a>
             <a href="#troubleshooting">Troubleshooting</a>
+            <a href="#live-code">Live Code</a>
           </div>
         </div>
       </div>
