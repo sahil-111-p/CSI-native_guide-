@@ -17,7 +17,7 @@ app.use(cors({
     // Allow any localhost port for development
     /^http:\/\/localhost:\d+$/,
   ],
-  methods: ['GET', 'POST'],
+  methods: ['GET', 'POST', 'DELETE'],
   credentials: false,
 }));
 

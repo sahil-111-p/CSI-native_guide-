@@ -82,7 +82,10 @@ router.post('/', async (req, res) => {
     });
 
     // Broadcast to all SSE clients immediately
-    broadcastToClients(entry.toJSON());
+    broadcastToClients({
+      type: 'publish',
+      ...entry.toJSON(),
+    });
 
     console.log(`📡 Published "${entry.title}" (${entry.language}) — ${sseClients.size} client(s) notified`);
 
@@ -90,6 +93,44 @@ router.post('/', async (req, res) => {
   } catch (err) {
     console.error('POST /api/code error:', err);
     res.status(500).json({ error: 'Failed to publish code.' });
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  console.log('🗑️ DELETE request received:', id);
+
+  try {
+    const deletedEntry = await CodeEntry.findByIdAndDelete(id);
+
+    if (!deletedEntry) {
+      console.log('❌ Code entry not found:', id);
+
+      return res.status(404).json({
+        error: 'Code entry not found.',
+      });
+    }
+
+    console.log('✅ Deleted:', deletedEntry.title);
+
+    broadcastToClients({
+      type: 'delete',
+      id: deletedEntry._id.toString(),
+    });
+
+    res.json({
+      success: true,
+      message: 'Code deleted successfully.',
+      id: deletedEntry._id.toString(),
+    });
+
+  } catch (err) {
+    console.error('❌ DELETE /api/code error:', err);
+
+    res.status(500).json({
+      error: 'Failed to delete code.',
+    });
   }
 });
 

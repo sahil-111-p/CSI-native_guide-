@@ -261,6 +261,49 @@ const PIP_STYLES = `
   .pip-copy-btn:hover { background: var(--orange); color: var(--white); transform: translate(1px,1px); box-shadow: 1px 1px 0 var(--black); }
   .pip-copy-btn.copied { background: #2E7D32; color: var(--white); }
 
+
+  .pip-delete-btn,
+.pip-delete-confirm,
+.pip-delete-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  border: var(--border-thin);
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 120ms ease;
+}
+
+.pip-delete-btn {
+  background: var(--orange);
+  color: var(--white);
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.pip-delete-confirm {
+  background: var(--black);
+  color: var(--white);
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.pip-delete-cancel {
+  background: var(--white);
+  color: var(--black);
+  box-shadow: 2px 2px 0 var(--black);
+}
+
+.pip-delete-btn:hover,
+.pip-delete-confirm:hover,
+.pip-delete-cancel:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--black);
+}
+
   .pip-item-body {
     background: var(--code-bg);
     overflow-x: auto;
@@ -303,8 +346,9 @@ function formatTime(dateStr) {
   }
 }
 
-function FeedItem({ item }) {
+function FeedItem({ item, isAdmin, onDelete }) {
   const [copied, setCopied] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   const handleCopy = async () => {
     const text = item.code || '';
@@ -334,6 +378,38 @@ function FeedItem({ item }) {
           <button type="button" className={`pip-copy-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
             {copied ? 'COPIED ✓' : 'COPY'}
           </button>
+          {isAdmin && (
+            confirming ? (
+              <>
+                <button
+                  type="button"
+                  className="pip-delete-confirm"
+                  onClick={() => {
+                    onDelete(item._id);
+                    setConfirming(false);
+                  }}
+                >
+                  CONFIRM
+                </button>
+
+                <button
+                  type="button"
+                  className="pip-delete-cancel"
+                  onClick={() => setConfirming(false)}
+                >
+                  CANCEL
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                className="pip-delete-btn"
+                onClick={() => setConfirming(true)}
+              >
+                DELETE
+              </button>
+            )
+          )}
         </div>
       </div>
       <div className="pip-item-body">
@@ -362,7 +438,7 @@ function PipInternalUI({ items, isAdmin }) {
   useEffect(() => {
     const feed = feedRef.current;
     if (!feed) return;
-    
+
     const doc = feed.ownerDocument;
     const win = doc.defaultView;
     if (!doc || !win) return;
@@ -413,6 +489,34 @@ function PipInternalUI({ items, isAdmin }) {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`${API_URL}/api/code/${id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data.error || `Server error ${res.status}`);
+      }
+
+      console.log('✅ Code deleted successfully');
+
+    } catch (err) {
+      console.error('❌ Delete code error:', err);
+
+      // Don't use alert()
+      setErrorMsg(err.message || 'Could not delete code.');
+
+      // Automatically clear the message
+      setTimeout(() => {
+        setErrorMsg('');
+      }, 4000);
+    }
+  };
+
+
   return (
     <div id="pip-root">
       <div className="pip-header">
@@ -446,7 +550,7 @@ function PipInternalUI({ items, isAdmin }) {
               </select>
             </div>
           </div>
-          
+
           <div className="admin-form-field">
             <label className="admin-form-label">Code</label>
             <textarea
@@ -484,7 +588,14 @@ function PipInternalUI({ items, isAdmin }) {
             <span>Waiting for instructor code…</span>
           </div>
         ) : (
-          feedItems.map(item => <FeedItem key={item._id} item={item} />)
+          feedItems.map(item => (
+            <FeedItem
+              key={item._id}
+              item={item}
+              isAdmin={isAdmin}
+              onDelete={handleDelete}
+            />
+          ))
         )}
       </div>
     </div>
@@ -499,7 +610,7 @@ export default function PipCodeViewer({ items = [], isAdmin = false, onClose }) 
 
   const openPip = useCallback(async () => {
     if (!isPipSupported) return;
-    
+
     // Do not reopen if already open
     if (pipWindowRef.current && !pipWindowRef.current.closed) {
       return;
@@ -581,16 +692,16 @@ export default function PipCodeViewer({ items = [], isAdmin = false, onClose }) 
         {isOpen ? (
           <>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-              <rect x="2" y="2" width="20" height="20" rx="2"/>
-              <line x1="9" y1="2" x2="9" y2="22"/>
+              <rect x="2" y="2" width="20" height="20" rx="2" />
+              <line x1="9" y1="2" x2="9" y2="22" />
             </svg>
             CLOSE PIP
           </>
         ) : (
           <>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-              <rect x="2" y="7" width="15" height="13" rx="2"/>
-              <path d="M7 7V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"/>
+              <rect x="2" y="7" width="15" height="13" rx="2" />
+              <path d="M7 7V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2" />
             </svg>
             POP OUT FEED
           </>
