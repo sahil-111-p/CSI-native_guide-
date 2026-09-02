@@ -146,12 +146,12 @@ export default function App() {
 
         <main className="main-content" id="main-content" tabIndex="-1">
           <HeroSection />
-          <PrerequisitesSection />
+          {/* <PrerequisitesSection />
           <NodeJsSection />
           <ReactSetupSection />
           <ReactStructureSection />
           <ReactCommandsSection />
-          <ReactWorkflowSection />
+          <ReactWorkflowSection /> */}
           <ExpoSetupSection />
           <ExpoStructureSection />
           <ExpoRunSection />

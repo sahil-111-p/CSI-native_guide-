@@ -5,19 +5,19 @@ const NAV_GROUPS = [
     title: 'Getting Started',
     items: [
       { id: 'introduction', label: 'Introduction' },
-      { id: 'prerequisites', label: 'Prerequisites' },
-      { id: 'nodejs', label: 'Node.js Setup' },
+      // { id: 'prerequisites', label: 'Prerequisites' },
+      // { id: 'nodejs', label: 'Node.js Setup' },
     ]
   },
-  {
-    title: 'React (Web)',
-    items: [
-      { id: 'react', label: 'Create Project' },
-      { id: 'react-structure', label: 'Project Structure' },
-      { id: 'react-commands', label: 'Commands' },
-      { id: 'react-workflow', label: 'Workflow' },
-    ]
-  },
+  // {
+  //   title: 'React (Web)',
+  //   items: [
+  //     { id: 'react', label: 'Create Project' },
+  //     { id: 'react-structure', label: 'Project Structure' },
+  //     { id: 'react-commands', label: 'Commands' },
+  //     { id: 'react-workflow', label: 'Workflow' },
+  //   ]
+  // },
   {
     title: 'React Native',
     items: [

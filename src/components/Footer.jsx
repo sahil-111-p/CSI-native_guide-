@@ -18,7 +18,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-links">
-          <div className="footer-col">
+          {/* <div className="footer-col">
             <h4>Getting Started</h4>
             <a href="#prerequisites">Prerequisites</a>
             <a href="#nodejs">Node.js Setup</a>
@@ -28,7 +28,7 @@ export default function Footer() {
             <a href="#react">Create Project</a>
             <a href="#react-commands">Commands</a>
             <a href="#react-workflow">Workflow</a>
-          </div>
+          </div> */}
           <div className="footer-col">
             <h4>React Native</h4>
             <a href="#expo">Expo Setup</a>

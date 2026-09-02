@@ -18,8 +18,8 @@ export default function Navbar({ mobileMenuOpen, setMobileMenuOpen, onWorkshopCl
 
         {/* Desktop Links */}
         <nav className="nav-links desktop-only" aria-label="Main navigation">
-          <a href="#prerequisites">Prerequisites</a>
-          <a href="#react">React</a>
+          {/* <a href="#prerequisites">Prerequisites</a>
+          <a href="#react">React</a> */}
           <a href="#expo">Expo</a>
           <a href="#cheatsheet">Cheat Sheet</a>
           <a href="#troubleshooting">Troubleshoot</a>
